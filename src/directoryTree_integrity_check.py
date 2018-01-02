@@ -69,10 +69,8 @@ def parse_hashlist_file():
 # returns the fixed hashlist
 
 def add_cwd_to_hashlist(hashlist):
-    # new_hashlist = []
-    # for couple in hashlist:
-        # new_hashlist.append((couple[0], (os.path.join(cwd, couple[1]))))
     return [(hash, os.path.join(cwd, relpath)) for hash, relpath in hashlist]
+
 
 def create_and_write_hashlist_to_file():
     print("Calculating hashes...")
@@ -81,10 +79,12 @@ def create_and_write_hashlist_to_file():
     write_hashlist_to_file(hashlist)
     print("Done")
 
+
 def print_menu():
     print("1. Calculate and write SHA1 hashes to file")
     print("2. Calculate SHA1 hashes and check them against file")
     print("3. Exit")
+
 
 if __name__ == '__main__':
 
