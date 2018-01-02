@@ -86,7 +86,6 @@ def print_menu():
     print("2. Calculate SHA1 hashes and check them against file")
     print("3. Exit")
 
-
 if __name__ == '__main__':
 
     cwd = os.getcwd()
