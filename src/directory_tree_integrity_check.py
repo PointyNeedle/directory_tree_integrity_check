@@ -27,7 +27,7 @@ def sha1(fname):
 
 def create_hashlist_from_path(path, verbose=True):
     hashlist = []
-    ignored_files = ['directoryTree_integrity_check.py', 'directory.sha1'] # add here the files you want to exclude from the integrity check
+    ignored_files = ['directory_tree_integrity_check.py', 'directory.sha1'] # add here the files you want to exclude from the integrity check
     for root, dirs, files in os.walk(path):
         files.sort() # preventing unexpected results by sorting the file names first
         for name in files:
