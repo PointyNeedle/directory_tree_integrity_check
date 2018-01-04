@@ -126,7 +126,7 @@ if __name__ == '__main__':
                     create_and_write_hashlist_to_file()
             # 'directory.sha1' exist
             else:
-                mismatch_number = 0
+                mismatch_number, num_of_checked_files = 0, 0
                 # parse it
                 parsed_hashlist = parse_hashlist_file()
                 # check parsed data against what we calculate in every iteration
@@ -137,9 +137,12 @@ if __name__ == '__main__':
                             # print("MISMATCH " + '"' + couple[1][ ( (couple[1].rfind('\\') ) + 1) : ] + '"')
                             print("MISMATCH " + '"' + couple[1] + '"')
                             mismatch_number += 1
+                        num_of_checked_files += 1
+                        print("Numbers of files checked: {}".format(num_of_checked_files), end='\r')
                     except FileNotFoundError:
                         print("File" + ' " ' + couple[1] + ' " ' + "has not been found" )
                         mismatch_number += 1
+                print('')
                 if mismatch_number == 0:
                     print("All files match")
 
