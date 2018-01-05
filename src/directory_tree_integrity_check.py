@@ -11,7 +11,7 @@ import sys
 # parameters: filename (full path)
 # reads it in 4096 bytes chunks and feeds them to the sha1 function
 # returns the sha1 hash
-# PS literally copypasted this from stackoverflow
+# PS literally copypasted this from Stack Overflow
 
 def sha1(fname):
     hash_sha1 = hashlib.sha1()
@@ -30,6 +30,8 @@ def create_hashlist_from_path(path, verbose=False):
     file_counter = 0
     hashlist = []
     for root, dirs, files in os.walk(path):
+        # taken from Stack Overflow, excludes directories in ignored_directories from dirs
+        dirs[:] = [d for d in dirs if d not in ignored_directories]
         files.sort() # preventing unexpected results by sorting the file names first
         for name in files:
             if (name not in ignored_files):
@@ -41,6 +43,7 @@ def create_hashlist_from_path(path, verbose=False):
                 elif verbose:
                     print(name + " Done")
     print('')
+    print("Hashed {} files".format(file_counter))
     return hashlist
 
 # parameters: a hashlist
@@ -94,6 +97,7 @@ def print_menu():
 def count_files_in_directory_tree(path):
     file_counter = 0
     for root, dirs, files in os.walk(path):
+        dirs[:] = [d for d in dirs if d not in ignored_directories]
         for name in files:
             if (name not in ignored_files):
                 file_counter += 1
@@ -103,6 +107,7 @@ def count_files_in_directory_tree(path):
 if __name__ == '__main__':
 
     ignored_files = ['directory_tree_integrity_check.py', 'directory.sha1'] # add here the files you want to exclude from the integrity check
+    ignored_directories = []
     cwd = os.getcwd()
     menu_choice = 0
     print_menu()
@@ -155,11 +160,12 @@ if __name__ == '__main__':
                         print("Checking: {:.1f}%".format((num_of_checked_files/len(parsed_hashlist))*100), end='\r')
                     except FileNotFoundError:
                         print("File" + ' " ' + couple[1] + ' " ' + "has not been found" )
+                        num_of_checked_files += 1
                         mismatch_number += 1
                 print('')
                 if mismatch_number == 0:
                     print("All files match")
-
+            print("Checked {} files".format(num_of_checked_files))
         elif menu_choice == 3:
             pass
 
