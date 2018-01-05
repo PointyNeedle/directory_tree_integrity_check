@@ -25,17 +25,22 @@ def sha1(fname):
 # a hashlist
 # returns the created hashlist
 
-def create_hashlist_from_path(path, verbose=True):
+def create_hashlist_from_path(path, verbose=False):
+    total_number_of_files = count_files_in_directory_tree(path)
+    file_counter = 0
     hashlist = []
-    ignored_files = ['directory_tree_integrity_check.py', 'directory.sha1'] # add here the files you want to exclude from the integrity check
     for root, dirs, files in os.walk(path):
         files.sort() # preventing unexpected results by sorting the file names first
         for name in files:
             if (name not in ignored_files):
                 path_to_be_written = os.path.relpath(root, start=path)
                 hashlist.append(((sha1(os.path.join(root, name)), os.path.join(path_to_be_written, name)))) # appends a new sha1 digest - file path tuple to the list
-                if verbose:
+                file_counter += 1
+                if not verbose:
+                    print("Progress: {:.1f}%".format((file_counter/total_number_of_files)*100), end='\r')
+                elif verbose:
                     print(name + " Done")
+    print('')
     return hashlist
 
 # parameters: a hashlist
@@ -86,14 +91,24 @@ def print_menu():
     print("3. Exit")
 
 
+def count_files_in_directory_tree(path):
+    file_counter = 0
+    for root, dirs, files in os.walk(path):
+        for name in files:
+            if (name not in ignored_files):
+                file_counter += 1
+    return file_counter
+
+
 if __name__ == '__main__':
 
+    ignored_files = ['directory_tree_integrity_check.py', 'directory.sha1'] # add here the files you want to exclude from the integrity check
     cwd = os.getcwd()
     menu_choice = 0
     print_menu()
 
     while menu_choice != 3:
-        print("Type in your choice:")
+        print("\nType in your choice:")
 
         # check if the menu_choice is different from the 3 allowed
         while True:
@@ -126,11 +141,10 @@ if __name__ == '__main__':
                     create_and_write_hashlist_to_file()
             # 'directory.sha1' exist
             else:
-                mismatch_number, num_of_checked_files = 0, 0
                 # parse it
                 parsed_hashlist = parse_hashlist_file()
+                mismatch_number, num_of_checked_files = 0, 0
                 # check parsed data against what we calculate in every iteration
-                print("Checking...")
                 for couple in parsed_hashlist:
                     try:
                         if couple[0] != sha1(couple[1]):
@@ -138,7 +152,7 @@ if __name__ == '__main__':
                             print("MISMATCH " + '"' + couple[1] + '"')
                             mismatch_number += 1
                         num_of_checked_files += 1
-                        print("Numbers of files checked: {}".format(num_of_checked_files), end='\r')
+                        print("Checking: {:.1f}%".format((num_of_checked_files/len(parsed_hashlist))*100), end='\r')
                     except FileNotFoundError:
                         print("File" + ' " ' + couple[1] + ' " ' + "has not been found" )
                         mismatch_number += 1
