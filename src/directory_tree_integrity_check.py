@@ -166,6 +166,7 @@ if __name__ == '__main__':
                 if mismatch_number == 0:
                     print("All files match")
             print("Checked {} files".format(num_of_checked_files))
+            
         elif menu_choice == 3:
             pass
 
