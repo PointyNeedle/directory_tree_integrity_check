@@ -153,7 +153,6 @@ if __name__ == '__main__':
                 for couple in parsed_hashlist:
                     try:
                         if couple[0] != sha1(couple[1]):
-                            # print("MISMATCH " + '"' + couple[1][ ( (couple[1].rfind('\\') ) + 1) : ] + '"')
                             print("MISMATCH " + '"' + couple[1] + '"')
                             mismatch_number += 1
                         num_of_checked_files += 1
@@ -166,7 +165,7 @@ if __name__ == '__main__':
                 if mismatch_number == 0:
                     print("All files match")
             print("Checked {} files".format(num_of_checked_files))
-            
+
         elif menu_choice == 3:
             pass
 
